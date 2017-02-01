@@ -59,8 +59,6 @@ async function createChannel(conn: Connection): Promise<Channel | undefined> {
       console.log('[AMQP] channel closed');
     });
 
-    channel.prefetch(10);
-
     return channel;
   } catch (error) {
     console.error('[AMQP] create channel failed');

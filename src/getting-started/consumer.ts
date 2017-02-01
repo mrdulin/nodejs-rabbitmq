@@ -31,6 +31,7 @@ async function main() {
     const channel: Channel | undefined = await createChannel(conn);
 
     if (channel) {
+      channel.prefetch(1);
       startConsumer(channel, conn);
     }
   }
