@@ -2,6 +2,13 @@ import amqp, { Connection, Channel } from 'amqplib';
 
 import { getEnvVars, EnvVars } from './env';
 
+enum ExchangeType {
+  direct = 'direct',
+  topic = 'topic',
+  headers = 'headers',
+  fanout = 'fanout',
+}
+
 async function connect(): Promise<Connection | undefined> {
   const env: EnvVars = getEnvVars();
 
@@ -66,4 +73,4 @@ async function createChannel(conn: Connection): Promise<Channel | undefined> {
   }
 }
 
-export { connect, Connection, closeOnError, createChannel };
+export { connect, Connection, closeOnError, createChannel, ExchangeType };

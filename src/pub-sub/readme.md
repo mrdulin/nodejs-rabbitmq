@@ -1,4 +1,4 @@
-# RabbitMQ 的 PUB/SUB 队列
+# RabbitMQ pub/sub
 
 场景：一个消息有多个消费者订阅
 
