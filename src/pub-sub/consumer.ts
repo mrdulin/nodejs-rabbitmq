@@ -1,5 +1,5 @@
 import { connect, createChannel, Connection, closeOnError, ExchangeType } from '../mq';
-import { Channel, Replies } from 'amqplib';
+import { Channel, Replies, ConsumeMessage } from 'amqplib';
 
 async function main() {
   const conn: Connection | undefined = await connect();
@@ -37,7 +37,7 @@ async function receiveLogs(channel: Channel, conn: Connection) {
   }
 
   try {
-    await channel.consume(assertQueue.queue, (message) => logMessage(message), { noAck: true });
+    await channel.consume(assertQueue.queue, (message: ConsumeMessage | null) => logMessage(message), { noAck: true });
   } catch (error) {
     closeOnError(error, conn);
   }
@@ -45,8 +45,10 @@ async function receiveLogs(channel: Channel, conn: Connection) {
   console.log(' [*] Waiting for logs. To exit press CTRL+C');
 }
 
-function logMessage(message) {
-  console.log(" [x] '%s'", message.content.toString());
+function logMessage(message: ConsumeMessage | null) {
+  if (message) {
+    console.log(" [x] '%s'", message.content.toString());
+  }
 }
 
 main();
