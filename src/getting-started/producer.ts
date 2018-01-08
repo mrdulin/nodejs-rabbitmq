@@ -18,10 +18,11 @@ async function startProducer(channel: Channel, conn: Connection) {
     email: faker.internet.email(),
   };
   const ok: boolean = channel.sendToQueue(QUEUE.HELLO, Buffer.from(JSON.stringify(message)));
-  console.log('ok: ', ok);
-  console.log(`[AMQP] sent: ${pd.json(message)}`);
+  console.log('[AMQP] send to queue: ', ok);
+  console.log(`[AMQP] sent: ${JSON.stringify(message)}`);
 
   await channel.close();
+  await conn.close();
 }
 
 async function main() {
