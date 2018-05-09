@@ -15,11 +15,11 @@ function logMessage(msg) {
 
 amqp
   .connect('amqp://localhost')
-  .then(conn => {
+  .then((conn) => {
     process.once('SIGINT', () => {
       conn.close();
     });
-    return conn.createChannel().then(ch => {
+    return conn.createChannel().then((ch) => {
       const ex = 'direct_logs';
       let ok = ch.assertExchange(ex, 'direct', { durable: false });
 
@@ -27,10 +27,10 @@ amqp
         return ch.assertQueue('', { exclusive: true });
       });
 
-      ok = ok.then(qok => {
+      ok = ok.then((qok) => {
         // 获取已经声明的队列对象queue
         const { queue } = qok;
-        const bindQueuePromises = severities.map(sev => {
+        const bindQueuePromises = severities.map((sev) => {
           return ch.bindQueue(queue, ex, sev);
         });
         return Promise.all(bindQueuePromises).then(() => {
@@ -38,7 +38,7 @@ amqp
         });
       });
 
-      ok = ok.then(queue => {
+      ok = ok.then((queue) => {
         return ch.consume(queue, logMessage, { noAck: true });
       });
       return ok.then(() => {
