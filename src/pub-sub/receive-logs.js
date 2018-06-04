@@ -20,6 +20,7 @@ amqp
       });
       ok = ok.then(qok => {
         // 将队列和Exchange绑定在一起，bindQueue的第三个参数是路由配置
+        // console.log('qok: ', qok);
         return ch.bindQueue(qok.queue, ex, '').then(() => {
           return qok.queue;
         });
