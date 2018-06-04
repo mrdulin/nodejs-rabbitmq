@@ -16,7 +16,7 @@ amqp
         const ok = ch.assertExchange(ex, 'direct', { durable: false });
 
         return ok.then(() => {
-          // 定义了路由变量severity，默认值为info
+          // 定义了routingKey(路由变量)severity，默认值为info
           // 向名为direct_logs的Exchange节点推送数据，并且带上路由变量severity
           ch.publish(ex, severity, Buffer.from(message));
           console.log(" [x] Sent %s:'%s'", severity, message);

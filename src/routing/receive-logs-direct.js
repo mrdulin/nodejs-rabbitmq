@@ -30,11 +30,10 @@ amqp
       ok = ok.then(qok => {
         // 获取已经声明的队列对象queue
         const { queue } = qok;
-        return Promise.all(
-          severities.map(sev => {
-            ch.bindQueue(queue, ex, sev);
-          })
-        ).then(() => {
+        const bindQueuePromises = severities.map(sev => {
+          return ch.bindQueue(queue, ex, sev);
+        });
+        return Promise.all(bindQueuePromises).then(() => {
           return queue;
         });
       });
