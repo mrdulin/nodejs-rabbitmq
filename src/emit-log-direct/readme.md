@@ -1,17 +1,19 @@
 # RabbitMQ 的队列路由
 
+`type`为`direct`的`exchange`的路由算法很简单： 一个消息会被发送`binding key`和`routing key`完全匹配的队列中
+
 启动消费者，启动一个绑定路由 key 为 error、 warning 的消费者，再启动一个绑定路由 key 为 error、warning、info 的消费者。
 
 shell 1:
 
 ```bash
-☁  nodejs-rabbitmq [master] ⚡  node src/routing/receive-logs-direct.js warning error > src/routing/logs_from_rabbit.log
+☁  nodejs-rabbitmq [master] ⚡  node src/emit-log-direct/receive.js warning error > src/routing/logs_from_rabbit.log
 ```
 
 shell 2:
 
 ```bash
-☁  nodejs-rabbitmq [master] ⚡  node src/routing/receive-logs-direct.js error info warning
+☁  nodejs-rabbitmq [master] ⚡  node src/emit-log-direct/receive.js error info warning
  [*] Waiting for logs. To exit press CTRL+C.
 ```
 
@@ -38,13 +40,13 @@ direct_logs	exchange	amq.gen-Pot00xwN1LeuKA9W0sl1Tg	queue	warning	[]
 生产者发送一个`error`级别的消息，这条消息既会输出到日志文件，也会在终端中打印出来
 
 ```bash
-☁  nodejs-rabbitmq [master] ⚡  node src/routing/emit-log-direct.js error "Something bad happened"
+☁  nodejs-rabbitmq [master] ⚡  node src/emit-log-direct/emit.js error "Something bad happened"
  [x] Sent error:'Something bad happened'
 ```
 
 生产者发送一个`info`级别的消息，这条消息不会输出到日志文件，只会在终端中打印出来
 
 ```bash
-☁  nodejs-rabbitmq [master] ⚡  node src/routing/emit-log-direct.js info "A info message"
+☁  nodejs-rabbitmq [master] ⚡  node src/emit-log-direct/emit.js info "A info message"
  [x] Sent info:'A info message'
 ```
