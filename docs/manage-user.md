@@ -106,3 +106,11 @@ guest	.*	.*	.*
 ```
 
 默认的`vhost`是`/`
+
+## 列出用户的权限
+
+```bash
+☁  nodejs-rabbitmq [master] rabbitmqctl list_user_permissions DL
+Listing permissions for user "DL" ...
+test	.*	.*	.*
+```
