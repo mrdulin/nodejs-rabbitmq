@@ -12,7 +12,7 @@ async function insertDataToDb(ch, msg) {
     console.log('order count: ', count);
     if (count < 100) {
       const order = await Order.create(data);
-      content = '创建order成功!';
+      content = `创建order成功!订单id: ${order._id.toString()}`;
       ch.ack(msg);
     } else {
       content = '秒杀光了！';
@@ -22,7 +22,9 @@ async function insertDataToDb(ch, msg) {
     console.log(err);
     content = '服务器内部错误!';
   }
-  ch.sendToQueue(`${config.RABBITMQ.queue}-back`, Buffer.from(content));
+  ch.sendToQueue(msg.properties.replyTo, Buffer.from(content), {
+    correlationId: msg.properties.correlationId
+  });
 }
 
 async function startMQServer() {

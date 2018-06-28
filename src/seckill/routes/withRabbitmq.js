@@ -8,6 +8,9 @@ const Order = require('../models/Order');
 
 const router = Router();
 
+const q1 = `${config.RABBITMQ.queue}-back`;
+const q2 = `${config.RABBITMQ.queue}-send`;
+
 let conn;
 amqp.connect(config.RABBITMQ.connection).then(_conn => {
   conn = _conn;
@@ -18,19 +21,21 @@ router.get('/buy', async (req, res) => {
   const dataString = JSON.stringify({ userId });
   try {
     const ch = await conn.createChannel();
-    const assertQueue = await ch.assertQueue(`${config.RABBITMQ.queue}-back`);
+    const assertQueue = await ch.assertQueue(q1);
 
-    // ch.consume(
-    //   `${config.RABBITMQ.queue}-back`,
-    //   msg => {
-    //     res.send(msg.content.toString());
-    //     // ch.close();
-    //   },
-    //   { noAck: true }
-    // );
+    ch.consume(
+      q1,
+      msg => {
+        res.send(msg.content.toString());
+        ch.close();
+      },
+      { noAck: true }
+    );
 
-    ch.sendToQueue(`${config.RABBITMQ.queue}-send`, Buffer.from(dataString), {
-      contentType: 'application/json'
+    ch.sendToQueue(q2, Buffer.from(dataString), {
+      contentType: 'application/json',
+      correlationId: userId,
+      replyTo: q1
     });
     console.log(' [x] Sent ', dataString);
 
