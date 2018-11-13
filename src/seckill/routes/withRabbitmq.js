@@ -23,6 +23,13 @@ router.get('/buy', async (req, res) => {
     const ch = await conn.createChannel();
     const assertQueue = await ch.assertQueue(q1);
 
+    ch.sendToQueue(q2, Buffer.from(dataString), {
+      contentType: 'application/json',
+      correlationId: userId,
+      replyTo: q1
+    });
+    console.log(' [x] Sent ', dataString);
+
     ch.consume(
       q1,
       msg => {
@@ -31,15 +38,6 @@ router.get('/buy', async (req, res) => {
       },
       { noAck: true }
     );
-
-    ch.sendToQueue(q2, Buffer.from(dataString), {
-      contentType: 'application/json',
-      correlationId: userId,
-      replyTo: q1
-    });
-    console.log(' [x] Sent ', dataString);
-
-    res.send('订单已提交');
   } catch (err) {
     console.log(err);
     res.send('服务器内部错误!');

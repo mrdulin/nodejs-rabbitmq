@@ -7,6 +7,9 @@ const config = {
     DBNAME: 'nodejs-rabbitmq'
   },
   RABBITMQ: {
+    connectionLocal: {
+      hostname: 'localhost'
+    },
     connection: {
       hostname: 'skunk.rmq.cloudamqp.com',
       username: 'fxhguaet',
