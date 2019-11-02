@@ -37,7 +37,7 @@
     "amqplib": "^0.5.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "mongoose": "^5.5.4",
+    "mongoose": "^5.7.5",
     "request": "^2.87.0",
     "request-promise": "^4.2.2"
   }
